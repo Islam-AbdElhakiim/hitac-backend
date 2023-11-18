@@ -1,5 +1,6 @@
 {
     "database": {
-        "url":"mongodb://127.0.0.1:27017/hitac"
+        "local":"mongodb://127.0.0.1:27017/hitac",
+        "deployed": "mongodb+srv://islamabdelhakiim21:<password>@hitac.1p9p3f3.mongodb.net/?retryWrites=true&w=majority"
     }
 }

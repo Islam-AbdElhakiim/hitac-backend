@@ -21,7 +21,7 @@ const morgan = require('morgan');
 
 //debugger 
 //database Server URL
-const databaseUrl = config.get('database.url');
+const databaseUrl = config.get('database.deployed'); 
 debug(`Database Server url is ${databaseUrl}`);
 
 

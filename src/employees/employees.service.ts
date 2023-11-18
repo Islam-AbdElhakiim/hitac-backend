@@ -7,8 +7,9 @@ import { UpdateEmpDto } from "./dto/update-employee.dto";
 import { CreateAuthDto } from "src/auth/dto/create-auth.dto";
 import { Session } from "src/sessions/schemas/session.schema";
 import { CreateSessionDto } from "src/sessions/dto/create-session.dto";
-import { Response } from "express";
+import e, { Response, Request, json } from "express";
 import { ClientEmpDto } from "./dto/client-employee.dto";
+import { error } from "console";
 const crypto = require('crypto');
 
 
@@ -27,17 +28,18 @@ export class EmployeesService {
     }
 
     async create(employee: CreateEmpDto): Promise<Employee> {
-        //hashing password
-        const { email, password } = employee;
-        // console.log(email, password);
-        const hashedPassword = EmployeesService.hash(password);
-        employee.password = hashedPassword;
-
-        //creating
         try {
+            //hashing password
+            const { email, password } = employee;
+            // console.log(email, password);
+            const hashedPassword = EmployeesService.hash(password);
+            employee.password = hashedPassword;
+
+            //creating
             const createdEmployee = new this.employeesModel(employee);
             return await createdEmployee.save();
         } catch (err) {
+            console.log("error is ", err)
             throw new BadRequestException(err.message);
         }
     }
@@ -47,65 +49,107 @@ export class EmployeesService {
     }
 
     public async getOne(id: mongoose.Schema.Types.ObjectId): Promise<Employee> {
-        return await this.employeesModel.findById(id);
+        try {
+            const user = await this.employeesModel.findById(id);
+
+            if (!user) {
+                throw new NotFoundException("user not exists!");
+            }
+            return user;
+        } catch (err) {
+            // console.log("error is ", JSON.stringify(err))
+            if (err.name === 'CastError') {
+                throw new BadRequestException(err.message)
+            } else {
+                throw err
+            }
+        }
     }
 
-    public async login(emp: CreateAuthDto, res?: Response): Promise<Employee> {
-        const { email, password, rememberMe } = emp;
-        const hashedPassword = EmployeesService.hash(password);
+    public async login(emp: CreateAuthDto, res?: Response, req?: Request): Promise<Employee> {
+        try {
+            const { email, password, rememberMe } = emp;
+            const hashedPassword = EmployeesService.hash(password);
 
-        const user = await this.employeesModel.findOne({ email, password: hashedPassword });
-        if (!user) throw new NotFoundException("user not exists!");
+            const user = await this.employeesModel.findOne({ email, password: hashedPassword });
 
-        // console.log(user)
-        const userId = user._id;
+            if (!user) throw new NotFoundException("user not exists!");
 
-        // set expiry
-        let expiry: Date;
-        if (rememberMe) {
-            expiry = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30) //one month
-        } else {
-            expiry = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7) //one week
+            // console.log(user)
+            const userId = user._id;
+
+            // set expiry
+            let expiry = rememberMe ? new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30) : new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7)
+
+            //create the session
+            const session = new this.sessinoModel<Session>({ expiry, userId });
+            const saved = await session.save()
+            const sessionId = saved._id.toString();
+
+            //create the cookie
+            const domain = req.headers.host;
+            res.cookie('session', sessionId, {
+                expires: expiry,
+                // sameSite: "none",
+                // secure: true,
+            });
+            res.cookie('user', userId.toString(), {
+                // sameSite: "none",
+                // secure: true,
+            });
+
+            res.status(200);
+            return user;
+        } catch (err) {
+            console.log("error is ", JSON.stringify(err))
+
+            if (err.name === 'NotFoundException') {
+                throw new NotFoundException(err.message)
+            } else {
+                throw new BadRequestException(err.message)
+            }
         }
 
-        //create the sessio(
-        const session = new this.sessinoModel<Session>({ expiry, userId });
-        const saved = await session.save()
-        const sessionId = saved._id.toString();
-        //create the cookie
-
-        res.cookie('session', sessionId, {
-            expires: expiry,
-        });
-        res.cookie('user', userId.toString());
-        res.status(200);
-        return user;
-
-    } 
+    }
 
     public async update(id: mongoose.Schema.Types.ObjectId, employee: UpdateEmpDto) {
         try {
-            const updateEmployee = new this.employeesModel(employee);
-            if (updateEmployee.password) {
-                console.log("has pw");
-                const hashedPassword = EmployeesService.hash(updateEmployee.password);
-                updateEmployee.password = hashedPassword;
+            if (!employee._id) employee._id = id;
+
+            if (employee.password) {
+                const hashedPassword = EmployeesService.hash(employee.password);
+                employee.password = hashedPassword;
             }
-            const user =  await this.employeesModel.updateOne({ "_id": id }, updateEmployee);
-            return JSON.stringify(user);
-        } catch( err ) {
-            console.log('err' , err.message)
-            return err.message
+            const user = await this.employeesModel.findOneAndUpdate({ "_id": id }, employee, { returnDocument: "after" });
+            return (user);
+        } catch (err) {
+            throw new BadRequestException(err.message);
         }
     }
 
-    public hide(id: mongoose.Schema.Types.ObjectId) {
+    public async hide(id: mongoose.Schema.Types.ObjectId) {
 
-        return this.employeesModel.updateOne({ '_id': id }, { "$set": { isDeleted: true } });
+        try {
+            const user = await this.employeesModel.findOneAndUpdate({ '_id': id }, { "$set": { isDeleted: true } }, { returnDocument: "after" });
+            if (!user) throw new NotFoundException("user not found!");
+            return user;
+        } catch (err) {
+            console.log(JSON.stringify(err));
+            if (err.name === "NotFoundException") {
+                throw err;
+            } else {
+                throw new BadRequestException(err.message);
+            }
+        }
     }
 
-    public remove(id: mongoose.Schema.Types.ObjectId) {
+    public async remove(id: mongoose.Schema.Types.ObjectId) {
 
-        return this.employeesModel.deleteOne({ '_id': id });
+        try {
+            const user = await this.employeesModel.deleteOne({ '_id': id });
+            return user;
+        } catch (err) {
+            throw new BadRequestException(err.message);
+        }
     }
 }

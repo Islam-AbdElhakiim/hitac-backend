@@ -9,16 +9,15 @@ const morgan = require('morgan');
 const debug = require('debug')('app:start');
 const helmet = require('helmet');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 const environment = process.env.NODE_ENV || "development";
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule);
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser());
 
   //allowing CORS
   const corsOptions: CorsOptions = {
-    origin: "http://localhost:3000", // List of allowed origins
+    origin: ["https://localhost:3000", "http://localhost:3000"], // List of allowed origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     exposedHeaders: "*"

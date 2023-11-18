@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, Header } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, Header, Req } from "@nestjs/common";
 import { EmployeesService } from "./employees.service";
 // import { Employee } from "./schemas/employee.schema";
 import { CreateEmpDto } from "./dto/create-employee.dto";
@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import { UpdateEmpDto } from "./dto/update-employee.dto";
 import { CreateAuthDto } from "src/auth/dto/create-auth.dto";
 import { NotFoundError } from "rxjs";
-import e, { Response } from "express";
+import { Response, Request } from "express";
 
 const debug = require('debug')('employees');
 
@@ -25,9 +25,9 @@ export class EmployeesController {
     }
 
     @Post("login")
-    async login(@Body() employee: CreateAuthDto, @Res({passthrough: true}) res: Response) {
+    async login(@Body() employee: CreateAuthDto, @Res({passthrough: true}) res: Response, @Req() req: Request) {
         // debug(employee)
-        return await this.service.login(employee, res);
+        return await this.service.login(employee, res, req);
     }
 
     @Post()
