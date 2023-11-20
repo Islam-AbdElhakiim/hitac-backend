@@ -9,9 +9,6 @@ export class Segment {
     @Prop({ minlength: 3, maxlength: 100 })
     description: string;
 
-    @Prop({ required: true, lowercase: true })
-    color: string;
-
 }
 
 export const SegmentSchema = SchemaFactory.createForClass(Segment);

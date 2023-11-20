@@ -4,21 +4,21 @@ export class CreateContactDto {
 
     lastName: string;
 
-    emails: [string];
+    emails: string[];
     
-    telephones: [string];
+    telephones: string[];
     
-    countries: [string];
+    countries: string[];
 
-    cities: [string];
+    cities: string[];
 
-    ports: [string];
+    ports: string[];
 
-    Account: string;
+    account: string;
 
-    segments: [string];
+    segments: string[];
 
-    products: [string];
+    products: string[];
 
     isDeleted: boolean;
 }

@@ -19,9 +19,9 @@ const debug = require('debug')('app:start');
 const morgan = require('morgan');
 
 
-//debugger 
 //database Server URL
-const databaseUrl = config.get('database.deployed'); 
+// const databaseUrl = config.get('database.deployed'); 
+const databaseUrl = config.get('database.local'); 
 debug(`Database Server url is ${databaseUrl}`);
 
 

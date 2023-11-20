@@ -1,39 +1,92 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Account } from './schemas/account.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 @Injectable()
 export class AccountsService {
-  constructor(@InjectModel(Account.name) private accountModel: Model<Account>) { }
+	constructor(@InjectModel(Account.name) private accountModel: Model<Account>) { }
 
-  async create(createAccountDto: CreateAccountDto) {
-    const createdAccount = new this.accountModel(createAccountDto);
-    return await createdAccount.save();
-  }
+	async create(createAccountDto: CreateAccountDto) {
+		try {
+			const createdAccount = new this.accountModel(createAccountDto);
+			return await createdAccount.save();
+		} catch (err) {
+			throw new BadRequestException(err.message);
+		}
 
-  async findOne(id: string) {
-    return this.accountModel.find({ "_id": id });
-  }
+	}
 
-  async findAll() {
-    return await this.accountModel.find();
-  }
+	async findOne(id: mongoose.Schema.Types.ObjectId) {
+		try {
+			const user = await this.accountModel.findById(id).populate(["contacts", "segments"]);
+			if (!user) {
+				throw new NotFoundException("account not exists!");
+			}
+			return user;
+		} catch (err) {
+			if (err.name === 'NotFoundException') {
+				throw err
+			} else {
+				throw new BadRequestException(err.message);
+			}
+		}
+	}
 
-  async update(id: string, updateAccountDto: UpdateAccountDto) {
-    const updatedAccount = new this.accountModel(updateAccountDto);
-    await updatedAccount.save();
-  }
+	async findAll() {
 
+		try {
+			return await this.accountModel.find();
 
-  async hide(id: string) {
-    return await this.accountModel.updateOne({ '_id': id }, { "$set": { isDeleted: true } });
-  }
+		} catch (err) {
+			throw new BadRequestException(err.message)
+		}
+	}
 
-  async remove(id: string) {
-    return await this.accountModel.deleteOne({ '_id': id });
-  }
+	async update(id: mongoose.Schema.Types.ObjectId, updateAccountDto: UpdateAccountDto) {
+		try {
+			if (!updateAccountDto._id) updateAccountDto._id = id;
+
+			const account = await this.accountModel.findOneAndUpdate({ "_id": id }, updateAccountDto, { returnDocument: "after" });
+			if (!account) throw new NotFoundException("account not exists!")
+			return (account);
+		} catch (err) {
+			if (err.name === "NotFoundException") {
+				throw err;
+			} else {
+				throw new BadRequestException(err.message);
+			}
+		}
+	}
+
+	async hide(id: mongoose.Schema.Types.ObjectId) {
+		try {
+			const account = await this.accountModel.findOneAndUpdate({ '_id': id }, { "$set": { isDeleted: true } }, { returnDocument: "after" });
+			if (!account) throw new NotFoundException("account not exists!");
+			return account;
+		} catch (err) {
+			if (err.name === "NotFoundException") {
+				throw err;
+			} else {
+				throw new BadRequestException(err.message);
+			}
+		}
+	}
+
+	async remove(id: mongoose.Schema.Types.ObjectId) {
+		try {
+			const account = await this.accountModel.findOneAndDelete({ '_id': id });
+			if (!account) throw new NotFoundException("account not exists!");
+			return account;
+		} catch (err) {
+			if (err.name === "NotFoundException") {
+				throw err;
+			} else {
+				throw new BadRequestException(err.message);
+			}
+		}
+	}
 
 }

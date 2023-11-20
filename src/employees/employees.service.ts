@@ -39,7 +39,6 @@ export class EmployeesService {
             const createdEmployee = new this.employeesModel(employee);
             return await createdEmployee.save();
         } catch (err) {
-            console.log("error is ", err)
             throw new BadRequestException(err.message);
         }
     }
@@ -58,10 +57,10 @@ export class EmployeesService {
             return user;
         } catch (err) {
             // console.log("error is ", JSON.stringify(err))
-            if (err.name === 'CastError') {
-                throw new BadRequestException(err.message)
+            if (err.name === 'NotFoundException') {
+                throw err;
             } else {
-                throw err
+                throw new BadRequestException(err.message);
             }
         }
     }
@@ -90,12 +89,12 @@ export class EmployeesService {
             const domain = req.headers.host;
             res.cookie('session', sessionId, {
                 expires: expiry,
-                // sameSite: "none",
-                // secure: true,
+                sameSite: "none",
+                secure: true,
             });
             res.cookie('user', userId.toString(), {
-                // sameSite: "none",
-                // secure: true,
+                sameSite: "none",
+                secure: true,
             });
 
             res.status(200);
@@ -120,10 +119,14 @@ export class EmployeesService {
                 const hashedPassword = EmployeesService.hash(employee.password);
                 employee.password = hashedPassword;
             }
+            console.log(employee)
             const user = await this.employeesModel.findOneAndUpdate({ "_id": id }, employee, { returnDocument: "after" });
+            if (!user) throw new NotFoundException("user not exists!")
+            console.log(user)
             return (user);
         } catch (err) {
-            throw new BadRequestException(err.message);
+            if (err.name == "NotFoundException") throw err;
+            else throw new BadRequestException(err.message);
         }
     }
 
@@ -134,7 +137,6 @@ export class EmployeesService {
             if (!user) throw new NotFoundException("user not found!");
             return user;
         } catch (err) {
-            console.log(JSON.stringify(err));
             if (err.name === "NotFoundException") {
                 throw err;
             } else {
@@ -146,10 +148,16 @@ export class EmployeesService {
     public async remove(id: mongoose.Schema.Types.ObjectId) {
 
         try {
-            const user = await this.employeesModel.deleteOne({ '_id': id });
+            const user = await this.employeesModel.findOneAndDelete({ '_id': id });
+            if (!user) throw new NotFoundException("user not found!");
+
             return user;
         } catch (err) {
-            throw new BadRequestException(err.message);
+            if (err.name === "NotFoundException") {
+                throw err;
+            } else {
+                throw new BadRequestException(err.message);
+            }
         }
     }
 }

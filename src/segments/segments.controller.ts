@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SegmentsService } from './segments.service';
 import { CreateSegmentDto } from './dto/create-segment.dto';
 import { UpdateSegmentDto } from './dto/update-segment.dto';
+import mongoose from 'mongoose';
 
 @Controller('segments')
 export class SegmentsController {
@@ -13,7 +14,7 @@ export class SegmentsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.segmentsService.findOne(id);
   }
 
@@ -23,18 +24,18 @@ export class SegmentsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSegmentDto: UpdateSegmentDto) {
+  update(@Param('id') id: mongoose.Schema.Types.ObjectId, @Body() updateSegmentDto: UpdateSegmentDto) {
     return this.segmentsService.update(id, updateSegmentDto);
   }
 
   @Delete('hide/:id')
-  hide(@Param('id') id: string) {
+  hide(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.segmentsService.hide(id);
   }
 
-  @Delete('delete:id')
-  remove(@Param('id') id: string) {
-    return this.segmentsService.remove(id);
+  @Delete('delete/:id')
+  delete(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+    return this.segmentsService.delete(id);
   }
 
 }

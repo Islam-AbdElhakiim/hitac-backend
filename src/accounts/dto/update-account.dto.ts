@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 export class UpdateAccountDto {
+    _id: mongoose.Schema.Types.ObjectId;
+
     arabicName: string;
     
     englishName: string;

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, Header, Req } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, Header, Req, Patch } from "@nestjs/common";
 import { EmployeesService } from "./employees.service";
 // import { Employee } from "./schemas/employee.schema";
 import { CreateEmpDto } from "./dto/create-employee.dto";
@@ -25,15 +25,15 @@ export class EmployeesController {
     }
 
     @Post("login")
-    async login(@Body() employee: CreateAuthDto, @Res({passthrough: true}) res: Response, @Req() req: Request) {
+    login(@Body() employee: CreateAuthDto, @Res({passthrough: true}) res: Response, @Req() req: Request) {
         // debug(employee)
-        return await this.service.login(employee, res, req);
+        return this.service.login(employee, res, req);
     }
 
     @Post()
-    async create(@Body() employee: CreateEmpDto) {
+    create(@Body() employee: CreateEmpDto) {
         // debug(employee);
-        return await this.service.create(employee)
+        return this.service.create(employee)
     }
 
     @Delete('hide/:id')
@@ -47,9 +47,9 @@ export class EmployeesController {
         return this.service.remove(id);
     }
 
-    @Put(':id')
+    @Patch(':id')
     update(@Param('id') id: mongoose.Schema.Types.ObjectId, @Body() employee: UpdateEmpDto) {
-        debug(employee);
+        // debug(employee);
         return this.service.update(id, employee);
     }
 }

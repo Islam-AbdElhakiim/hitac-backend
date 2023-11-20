@@ -1,24 +1,27 @@
+import mongoose from "mongoose";
+
 export class UpdateContactDto {
-        
+    _id: mongoose.Schema.Types.ObjectId;
+
     firstName: string;
 
     lastName: string;
 
-    emails: [string];
-    
-    telephones: [string];
-    
-    countries: [string];
+    emails: string[];
 
-    cities: [string];
+    telephones: string[];
 
-    ports: [string];
+    countries: string[];
+
+    cities: string[];
+
+    ports: string[];
 
     account: string;
 
-    segments: [string];
+    segments: string[];
 
-    products: [string];
+    products: string[];
 
     isDeleted: boolean;
 }
