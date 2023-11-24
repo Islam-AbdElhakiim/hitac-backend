@@ -10,7 +10,7 @@ export class SegmentsService {
 
   constructor(@InjectModel(Segment.name) private segmentModel: Model<Segment>) { }
 
-  async create(CreCreateSegmentDto:CreateSegmentDto) {
+  async create(CreCreateSegmentDto: CreateSegmentDto) {
     try {
       const createdSegment = new this.segmentModel(CreCreateSegmentDto);
       return await createdSegment.save();
@@ -75,15 +75,11 @@ export class SegmentsService {
 
   async delete(id: mongoose.Schema.Types.ObjectId) {
     try {
-      const deletedSegment = (await this.segmentModel.deleteOne({ '_id': id }));
-      if (deletedSegment.deletedCount < 1) throw new NotFoundException("segment not exists!");
-      return deletedSegment;
+      const deletedRecord = (await this.segmentModel.deleteOne({ '_id': id }));
+      if (deletedRecord.deletedCount < 1) throw new BadRequestException("record Couldn't be deleted or not exists!");
+      return deletedRecord;
     } catch (err) {
-      if (err.name === "NotFoundException") {
-        throw err;
-      } else {
-        throw new BadRequestException(err.message);
-      }
+      throw new BadRequestException(err.message);
     }
   }
 }

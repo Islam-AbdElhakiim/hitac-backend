@@ -3,17 +3,18 @@ import mongoose from "mongoose";
 
 @Schema()
 export class ReturnRequest {
-    // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'salesOrders' })
-    @Prop()
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'SupplyOrder' })
     supplyOrder: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'suppliers' })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Supplier' })
     supplier: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'products' })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
     product: string;
 
-    @Prop({ required: true })
+    @Prop({
+        type: Number,
+    },)
     price: number;
 
     @Prop({ lowercase: true })
@@ -22,12 +23,15 @@ export class ReturnRequest {
     @Prop({ required: true })
     createdOn: Date;
 
-    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'employees' })
-    createdBy: string;
+    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Employee' })
+    createdBy: mongoose.Schema.Types.ObjectId;
 
-    // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'transactions' })
-    @Prop()
-    transactions: [string];
+    @Prop({ type: Array<mongoose.Schema.Types.ObjectId> })
+    transactions: mongoose.Schema.Types.ObjectId[];
+
+    @Prop({required: true, default: false})
+    isDeleted: boolean;
+
 }
 
 export const ReturnRequestSchema = SchemaFactory.createForClass(ReturnRequest);

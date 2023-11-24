@@ -10,9 +10,9 @@ export class ContactsService {
   constructor(@InjectModel(Contact.name) private contactModel: Model<Contact>) { }
 
 
-  async create(CreateContactDto: CreateContactDto) {
+  async create(createContactDto: CreateContactDto) {
     try {
-      const createdContact = new this.contactModel(CreateContactDto);
+      const createdContact = new this.contactModel(createContactDto);
       return await createdContact.save();
     } catch (err) {
       throw new BadRequestException(err.message);
@@ -73,17 +73,13 @@ export class ContactsService {
     }
   }
 
-  async remove(id: mongoose.Schema.Types.ObjectId) {
+  async delete(id: mongoose.Schema.Types.ObjectId) {
     try {
-      const contact = await this.contactModel.findOneAndDelete({ '_id': id });
-      if (!contact) throw new NotFoundException("contact not exists!");
-      return contact;
+      const deletedRecord = (await this.contactModel.deleteOne({ '_id': id }));
+      if (deletedRecord.deletedCount < 1) throw new BadRequestException("record Couldn't be deleted or not exists!");
+      return deletedRecord;
     } catch (err) {
-      if (err.name === "NotFoundException") {
-        throw err;
-      } else {
-        throw new BadRequestException(err.message);
-      }
+      throw new BadRequestException(err.message);
     }
   }
 }

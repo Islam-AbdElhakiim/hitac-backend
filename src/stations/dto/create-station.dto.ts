@@ -1,23 +1,25 @@
+import mongoose from "mongoose";
+
 export class CreateStationDto {
     arabicName: string;
     
     englishName: string;
     
-    email: [string];
+    email: string[];
 
-    telephone: [string];
+    telephone: string[];
 
-    country: [string];
+    country: string[];
     
-    city: [string];
+    city: string[];
 
-    address: [string]
+    address: string[]
+        
+    segments: mongoose.Schema.Types.ObjectId[];
     
-    port: [string];
+    products: mongoose.Schema.Types.ObjectId[];
+
+    totalDebt: number;
     
-    segments: [string];
-    
-    products: [string];
-    
-    transactions: [string];
+    transactions: mongoose.Schema.Types.ObjectId[];
 }

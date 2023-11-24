@@ -38,13 +38,13 @@ export class EmployeesController {
 
     @Delete('hide/:id')
     hide(@Param('id') id: mongoose.Schema.Types.ObjectId) {
-        // debug("id is ", id);
+        debug("id is ", id);
         return this.service.hide(id);
     }
 
     @Delete('delete/:id')
-    remove(@Param('id') id: mongoose.Schema.Types.ObjectId) {
-        return this.service.remove(id);
+    delete(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+        return this.service.delete(id);
     }
 
     @Patch(':id')

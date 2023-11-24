@@ -1,24 +1,26 @@
+import mongoose from "mongoose";
+
 export class CreateSupplierDto {
         
     firstName: string;
 
     lastName: string;
 
-    emails: [string];
+    emails: string[];
     
-    telephones: [string];
+    telephones: string[];
     
-    countries: [string];
+    countries: string[];
 
-    cities: [string];
+    cities: string[];
 
-    ports: [string];
-
-    segments: [string];
-
-    products: [string];
-
+    segments: mongoose.Schema.Types.ObjectId[];
+    
+    products: mongoose.Schema.Types.ObjectId[];
+    
+    totalDebt: number;
+    
+    transactions: mongoose.Schema.Types.ObjectId[];
+    
     isDeleted: boolean;
-
-    transactions: [string];
 }

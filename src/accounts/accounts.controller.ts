@@ -34,7 +34,7 @@ export class AccountsController {
   }
 
   @Delete('delete/:id')
-  remove(@Param('id') id: mongoose.Schema.Types.ObjectId) {
-    return this.accountsService.remove(id);
+  delete(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+    return this.accountsService.delete(id);
   }
 }

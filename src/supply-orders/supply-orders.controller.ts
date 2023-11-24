@@ -2,14 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SupplyOrdersService } from './supply-orders.service';
 import { CreateSupplyOrderDto } from './dto/create-supply-order.dto';
 import { UpdateSupplyOrderDto } from './dto/update-supply-order.dto';
+import mongoose from 'mongoose';
 
 @Controller('supply-orders')
 export class SupplyOrdersController {
-  constructor(private readonly supplyOrdersService: SupplyOrdersService) {}
+  constructor(private readonly supplyOrdersService: SupplyOrdersService) { }
 
   @Post()
-  create(@Body() createSupplyOrderDto: CreateSupplyOrderDto) {
-    return this.supplyOrdersService.create(createSupplyOrderDto);
+  create(@Body() createStationDto: CreateSupplyOrderDto) {
+    return this.supplyOrdersService.create(createStationDto);
   }
 
   @Get()
@@ -18,22 +19,22 @@ export class SupplyOrdersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.supplyOrdersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplyOrderDto: UpdateSupplyOrderDto) {
-    return this.supplyOrdersService.update(id, updateSupplyOrderDto);
+  update(@Param('id') id: mongoose.Schema.Types.ObjectId, @Body() updateStationDto: UpdateSupplyOrderDto) {
+    return this.supplyOrdersService.update(id, updateStationDto);
   }
-  
+
   @Delete('hide/:id')
-  hide(@Param('id') id: string) {
+  hide(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.supplyOrdersService.hide(id);
   }
-  
-  @Delete('delete:id')
-  remove(@Param('id') id: string) {
-    return this.supplyOrdersService.remove(id);
+
+  @Delete('delete/:id')
+  delete(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+    return this.supplyOrdersService.delete(id);
   }
 }

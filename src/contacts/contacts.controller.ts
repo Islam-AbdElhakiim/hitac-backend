@@ -30,11 +30,11 @@ export class ContactsController {
 
   @Delete('hide/:id')
   hide(@Param('id') id: mongoose.Schema.Types.ObjectId) {
-    return this.contactsService.remove(id);
+    return this.contactsService.hide(id);
   }
 
   @Delete('delete/:id')
-  remove(@Param('id') id: mongoose.Schema.Types.ObjectId) {
-    return this.contactsService.remove(id);
+  delete(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+    return this.contactsService.delete(id);
   }
 }

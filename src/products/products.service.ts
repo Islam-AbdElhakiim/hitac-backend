@@ -1,39 +1,83 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Product } from './schemas/product.schema';
-import { Model } from 'mongoose';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductsService {
-  
   constructor(@InjectModel(Product.name) private productModel: Model<Product>) { }
 
-  async create(createdProductDto: CreateProductDto) {
-    const createdProduct = new this.productModel(createdProductDto);
-    return await createdProduct.save();
+
+  async create(createDto: CreateProductDto) {
+    try {
+      const createdRecord = new this.productModel(createDto);
+      return await createdRecord.save();
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
+
   }
 
-  findOne(id: string) {
-    return this.productModel.find({ "_id": id });
+  async findOne(id: mongoose.Schema.Types.ObjectId) {
+    try {
+      const record = await this.productModel.findById(id).populate(["segment"]);
+      if (!record) throw new NotFoundException("record not exists!");
+      return record;
+    } catch (err) {
+      if (err.name === 'NotFoundException') {
+        throw err
+      } else {
+        throw new BadRequestException(err.message);
+      }
+    }
   }
 
   async findAll() {
-    return await this.productModel.find();
+
+    try {
+      return await this.productModel.find().populate(["segment"]);
+    } catch (err) {
+      throw new BadRequestException(err.message)
+    }
   }
 
-  async update(id: string, updatedProductDto: UpdateProductDto) {
-    const updatedProduct = new this.productModel(updatedProductDto);
-    await updatedProduct.save();
+  async update(id: mongoose.Schema.Types.ObjectId, updateRecord: UpdateProductDto) {
+    try {
+      const newRecord = await this.productModel.findOneAndUpdate({ "_id": id }, updateRecord, { returnDocument: "after" });
+      if (!newRecord) throw new NotFoundException("record not exists!")
+      return (newRecord);
+    } catch (err) {
+      if (err.name === "NotFoundException") {
+        throw err;
+      } else {
+        throw new BadRequestException(err.message);
+      }
+    }
   }
 
-
-  async hide(id: string) {
-    return await this.productModel.updateOne({ '_id': id }, { "$set": { isDeleted: true } });
+  async hide(id: mongoose.Schema.Types.ObjectId) {
+    try {
+      const record = await this.productModel.findOneAndUpdate({ '_id': id }, { "$set": { isDeleted: true } }, { returnDocument: "after" });
+      if (!record) throw new NotFoundException("record not exists!");
+      return record;
+    } catch (err) {
+      if (err.name === "NotFoundException") {
+        throw err;
+      } else {
+        throw new BadRequestException(err.message);
+      }
+    }
   }
 
-  async remove(id: string) {
-    return await this.productModel.deleteOne({ '_id': id });
+  async delete(id: mongoose.Schema.Types.ObjectId) {
+    try {
+      const deletedRecord = (await this.productModel.deleteOne({ '_id': id }));
+      if (deletedRecord.deletedCount < 1) throw new BadRequestException("record Couldn't be deleted or not exists!");
+      return deletedRecord;
+    } catch (err) {
+      throw new BadRequestException(err.message);
+    }
   }
 }

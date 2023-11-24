@@ -1,18 +1,22 @@
+import mongoose from "mongoose";
+
 export class CreateSupplyOrderDto {
     
-    salesOrder: string;
+    salesOrder: mongoose.Schema.Types.ObjectId;
 
-    supplier: string;
+    supplier: mongoose.Schema.Types.ObjectId;
 
-    product: string;
+    products: mongoose.Schema.Types.ObjectId[];
 
-    price: BigInteger
+    price: number
 
     description: string;
 
     createdOn: Date;
 
-    createdBy: string;
+    createdBy: mongoose.Schema.Types.ObjectId;
 
-    transactions: [string];
+    transactions: mongoose.Schema.Types.ObjectId[];
+
+    isDeleted: boolean;
 }

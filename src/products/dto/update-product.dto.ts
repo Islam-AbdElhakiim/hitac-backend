@@ -1,10 +1,11 @@
+import mongoose from "mongoose";
 import { IAttribute } from "./create-product.dto";
-
 
 export class UpdateProductDto {
     name: string;
     description: string;
-    segment: string;
-    imageSrc: string;
-    attributes: [IAttribute]
-}
+    segment: mongoose.Schema.Types.ObjectId;
+    image: string;
+    attributes: IAttribute[];
+    isDeleted: boolean;
+} 

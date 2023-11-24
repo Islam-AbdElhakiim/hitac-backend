@@ -20,8 +20,9 @@ const morgan = require('morgan');
 
 
 //database Server URL
-// const databaseUrl = config.get('database.deployed'); 
-const databaseUrl = config.get('database.local'); 
+const databaseUrl = config.get('database.deployed'); 
+// const databaseUrl = config.get('database.local'); 
+// const databaseUrl = "mongodb+srv://islamabdelhakiim21:VGaG82ZDo9r6xnUg@hitac.1p9p3f3.mongodb.net/?retryWrites=true&w=majority"; 
 debug(`Database Server url is ${databaseUrl}`);
 
 
@@ -35,3 +36,14 @@ export class AppModule implements NestModule {
     consumer.apply(morgan('combined'));
   }
 }
+/**
+ * type: account, debit
+ * type [station, supplier] : [New order, Payment, refund]
+ * category [debit, credit]  : [New order, Payment, refund] [rent, salaries, fixed costs, revenue]
+ * class 
+ * factor [supplier, station]
+ * bank account
+ * amount
+ * totalbefore
+ * totalafter
+ */

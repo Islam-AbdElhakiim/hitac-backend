@@ -38,7 +38,7 @@ export class AccountsService {
 	async findAll() {
 
 		try {
-			return await this.accountModel.find();
+			return await this.accountModel.find().populate(["contacts", "segments"]);
 
 		} catch (err) {
 			throw new BadRequestException(err.message)
@@ -75,17 +75,13 @@ export class AccountsService {
 		}
 	}
 
-	async remove(id: mongoose.Schema.Types.ObjectId) {
+	async delete(id: mongoose.Schema.Types.ObjectId) {
 		try {
-			const account = await this.accountModel.findOneAndDelete({ '_id': id });
-			if (!account) throw new NotFoundException("account not exists!");
-			return account;
+			const deletedRecord = (await this.accountModel.deleteOne({ '_id': id }));
+			if (deletedRecord.deletedCount < 1) throw new BadRequestException("account Couldn't be deleted or not exists!");
+			return deletedRecord;
 		} catch (err) {
-			if (err.name === "NotFoundException") {
-				throw err;
-			} else {
-				throw new BadRequestException(err.message);
-			}
+			throw new BadRequestException(err.message);
 		}
 	}
 

@@ -145,19 +145,13 @@ export class EmployeesService {
         }
     }
 
-    public async remove(id: mongoose.Schema.Types.ObjectId) {
-
+    async delete(id: mongoose.Schema.Types.ObjectId) {
         try {
-            const user = await this.employeesModel.findOneAndDelete({ '_id': id });
-            if (!user) throw new NotFoundException("user not found!");
-
-            return user;
+            const deletedRecord = (await this.employeesModel.deleteOne({ '_id': id }));
+            if (deletedRecord.deletedCount < 1) throw new BadRequestException("record Couldn't be deleted or not exists!");
+            return deletedRecord;
         } catch (err) {
-            if (err.name === "NotFoundException") {
-                throw err;
-            } else {
-                throw new BadRequestException(err.message);
-            }
+            throw new BadRequestException(err.message);
         }
     }
 }

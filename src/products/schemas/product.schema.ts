@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-import { Attribute, AttributeSchema } from "./attribute.schema";
+import { Attribute} from "./attribute.schema";
 
 @Schema()
 export class Product {
@@ -11,14 +11,15 @@ export class Product {
     description: string;
     
     @Prop()
-    imageSrc: string;
+    image: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'segments', required: true })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Segment'})
     segment: mongoose.Schema.Types.ObjectId;
 
-    @Prop({type: [AttributeSchema]})
-    attributes: [Attribute];
-
+    @Prop()
+    attributes: Array<Attribute>;
+    @Prop({required: true, default: false})
+    isDeleted: boolean
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

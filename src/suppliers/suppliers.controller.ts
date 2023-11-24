@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import mongoose from 'mongoose';
 
 @Controller('suppliers')
 export class SuppliersController {
-  constructor(private readonly suppliersService: SuppliersService) {}
+  constructor(private readonly suppliersService: SuppliersService) { }
 
   @Post()
   create(@Body() createSupplierDto: CreateSupplierDto) {
@@ -18,22 +19,22 @@ export class SuppliersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.suppliersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplierDto: UpdateSupplierDto) {
+  update(@Param('id') id: mongoose.Schema.Types.ObjectId, @Body() updateSupplierDto: UpdateSupplierDto) {
     return this.suppliersService.update(id, updateSupplierDto);
   }
 
   @Delete('hide/:id')
-  hide(@Param('id') id: string) {
+  hide(@Param('id') id: mongoose.Schema.Types.ObjectId) {
     return this.suppliersService.hide(id);
   }
-  
-  @Delete('delete:id')
-  remove(@Param('id') id: string) {
-    return this.suppliersService.remove(id);
+
+  @Delete('delete/:id')
+  delete(@Param('id') id: mongoose.Schema.Types.ObjectId) {
+    return this.suppliersService.delete(id);
   }
 }
