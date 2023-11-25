@@ -17,6 +17,10 @@ export class CreateAccountDto {
 
     ports: string[];
 
+    addresses: string[];
+
+    website: string;
+
     segments: mongoose.Types.ObjectId[];
 
     products: mongoose.Types.ObjectId[];
