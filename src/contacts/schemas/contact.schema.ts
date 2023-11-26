@@ -10,10 +10,10 @@ export class Contact {
     @Prop({ required: true, lowercase: true, minlength: 3, maxlength: 15 })
     lastName: string;
 
-    @Prop({ required: true, lowercase: true })
+    @Prop({ lowercase: true, default: [] })
     emails: string[];
 
-    @Prop({ required: true, lowercase: true })
+    @Prop({  lowercase: true, default: [] })
     telephones: string[];
 
     @Prop({ required: true, lowercase: true })
@@ -24,14 +24,20 @@ export class Contact {
 
     @Prop({ required: true, lowercase: true })
     ports: string[];
+    
+    @Prop({ lowercase: true, default: "" })
+    notes: string;
+    
+    @Prop({ lowercase: true, default: "" })
+    website: string;
 
-    @Prop({ required: true, type: Array<mongoose.Schema.Types.ObjectId>, default: []})
+    @Prop({ type: Array<mongoose.Schema.Types.ObjectId>, default: [] })
     segments: string[];
 
-    @Prop({ required: true, type: Array<mongoose.Schema.Types.ObjectId>, default: []})
+    @Prop({ type: Array<mongoose.Schema.Types.ObjectId>, default: [] })
     products: string[];
 
-    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Account' })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Account', default: null })
     account: mongoose.Schema.Types.ObjectId;
 
     @Prop({ default: false })

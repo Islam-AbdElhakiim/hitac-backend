@@ -13,7 +13,9 @@ export class UpdateStationDto {
     
     city: string[];
 
-    address: string[]
+    address: string;
+
+    notes: string;
         
     segments: mongoose.Schema.Types.ObjectId[];
     

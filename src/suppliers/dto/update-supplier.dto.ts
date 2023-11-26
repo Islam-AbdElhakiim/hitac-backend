@@ -13,6 +13,8 @@ export class UpdateSupplierDto {
 
     cities: string[];
 
+    notes: string;
+
     totalDebt: number;
 
     segments: mongoose.Schema.Types.ObjectId[];

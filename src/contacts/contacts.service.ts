@@ -37,7 +37,7 @@ export class ContactsService {
   async findAll() {
 
     try {
-      return await this.contactModel.find();
+      return await this.contactModel.find().populate("account");
     } catch (err) {
       throw new BadRequestException(err.message)
     }

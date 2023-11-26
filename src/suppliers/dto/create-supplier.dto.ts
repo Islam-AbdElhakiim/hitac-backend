@@ -13,6 +13,8 @@ export class CreateSupplierDto {
     countries: string[];
 
     cities: string[];
+    
+    notes: string;
 
     segments: mongoose.Schema.Types.ObjectId[];
     

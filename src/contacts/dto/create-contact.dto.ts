@@ -16,6 +16,10 @@ export class CreateContactDto {
 
     account: string;
 
+    notes: string;
+
+    website: [];
+
     segments: string[];
 
     products: string[];

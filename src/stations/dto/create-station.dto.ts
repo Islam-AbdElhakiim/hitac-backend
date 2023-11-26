@@ -13,7 +13,9 @@ export class CreateStationDto {
     
     city: string[];
 
-    address: string[]
+    address: string;
+
+    notes: string;
         
     segments: mongoose.Schema.Types.ObjectId[];
     

@@ -22,7 +22,13 @@ export class Station {
     @Prop({ required: true, lowercase: true })
     cities: string[];
 
-    @Prop({ type: Array<mongoose.Schema.Types.ObjectId>, ref: 'Segment' })
+    @Prop({ default: ""})
+    address: string;
+
+    @Prop({ default: ""})
+    notes: string;
+
+    @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Segment' })
     segments: Array<mongoose.Schema.Types.ObjectId>;
 
     @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Product' })
