@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 export interface IAttribute {
-    attribute: string,
-    options: string[];
+    key: string,
+    values: string[];
 }
 
 export class CreateProductDto {
@@ -10,6 +10,6 @@ export class CreateProductDto {
     description: string;
     segment: mongoose.Schema.Types.ObjectId;
     image: string;
-    attributes: IAttribute[];
+    specifications: IAttribute[];
     isDeleted: boolean;
 }

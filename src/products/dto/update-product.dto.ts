@@ -6,6 +6,6 @@ export class UpdateProductDto {
     description: string;
     segment: mongoose.Schema.Types.ObjectId;
     image: string;
-    attributes: IAttribute[];
+    specifications: IAttribute[];
     isDeleted: boolean;
 } 

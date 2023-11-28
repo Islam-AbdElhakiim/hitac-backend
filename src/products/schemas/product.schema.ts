@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
-import { Attribute} from "./attribute.schema";
+import { IAttribute } from "../dto/create-product.dto";
 
 @Schema()
 export class Product {
@@ -17,7 +17,8 @@ export class Product {
     segment: mongoose.Schema.Types.ObjectId;
 
     @Prop()
-    attributes: Array<Attribute>;
+    specifications: IAttribute[];
+
     @Prop({required: true, default: false})
     isDeleted: boolean
 }
