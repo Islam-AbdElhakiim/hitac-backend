@@ -1,8 +1,5 @@
-import mongoose from "mongoose";
 
 export class UpdateContactDto {
-    _id: mongoose.Schema.Types.ObjectId;
-
     firstName: string;
 
     lastName: string;
@@ -18,6 +15,10 @@ export class UpdateContactDto {
     ports: string[];
 
     account: string;
+
+    notes: string;
+
+    websites: string[];
 
     segments: string[];
 

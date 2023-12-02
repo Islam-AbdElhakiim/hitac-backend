@@ -18,7 +18,7 @@ export class CreateContactDto {
 
     notes: string;
 
-    website: [];
+    websites: string[];
 
     segments: string[];
 

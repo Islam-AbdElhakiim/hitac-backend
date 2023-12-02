@@ -13,7 +13,7 @@ export class Contact {
     @Prop({ lowercase: true, default: [] })
     emails: string[];
 
-    @Prop({  lowercase: true, default: [] })
+    @Prop({ lowercase: true, default: [] })
     telephones: string[];
 
     @Prop({ required: true, lowercase: true })
@@ -24,12 +24,12 @@ export class Contact {
 
     @Prop({ required: true, lowercase: true })
     ports: string[];
-    
+
     @Prop({ lowercase: true, default: "" })
     notes: string;
-    
-    @Prop({ lowercase: true, default: "" })
-    website: string;
+
+    @Prop({ default: [] })
+    websites: string[];
 
     @Prop({ type: Array<mongoose.Schema.Types.ObjectId>, default: [] })
     segments: string[];
