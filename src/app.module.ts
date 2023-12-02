@@ -13,6 +13,8 @@ import { SupplyOrdersModule } from './supply-orders/supply-orders.module';
 import { ReturnRequestsModule } from './return-requests/return-requests.module';
 // import { AuthModule } from './auth/auth.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { PatchesModule } from './patches/patches.module';
+import { PalletsModule } from './pallets/pallets.module';
 
 import * as config from 'config';
 const debug = require('debug')('app:start');
@@ -27,7 +29,7 @@ debug(`Database Server url is ${databaseUrl}`);
 
 
 @Module({
-  imports: [EmployeesModule, MongooseModule.forRoot(databaseUrl), AccountsModule, ContactsModule, SuppliersModule, StationsModule, SegmentsModule, ProductsModule, SupplyOrdersModule, ReturnRequestsModule, SessionsModule, ],
+  imports: [EmployeesModule, MongooseModule.forRoot(databaseUrl), AccountsModule, ContactsModule, SuppliersModule, StationsModule, SegmentsModule, ProductsModule, SupplyOrdersModule, ReturnRequestsModule, SessionsModule,  PatchesModule, PalletsModule, ],
   controllers: [AppController],
   providers: [AppService],
 })
@@ -36,14 +38,3 @@ export class AppModule implements NestModule {
     consumer.apply(morgan('combined'));
   }
 }
-/**
- * type: account, debit
- * type [station, supplier] : [New order, Payment, refund]
- * category [debit, credit]  : [New order, Payment, refund] [rent, salaries, fixed costs, revenue]
- * class 
- * factor [supplier, station]
- * bank account
- * amount
- * totalbefore
- * totalafter
- */
