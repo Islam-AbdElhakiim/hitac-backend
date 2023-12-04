@@ -24,7 +24,7 @@ export class PatchesService {
 
   async findOne(id: mongoose.Schema.Types.ObjectId) {
     try {
-      const record = await this.PatchModel.findById(id).populate(['suppliers', "qualitySpecialist", "operation", "station", "products", "patch"]);
+      const record = await this.PatchModel.findById(id).populate(['suppliers', "qualitySpecialist", "operation", "station", "products"]);
       if (!record) throw new NotFoundException("record not exists!");
       return record;
     } catch (err) {
