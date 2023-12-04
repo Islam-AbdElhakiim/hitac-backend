@@ -16,16 +16,24 @@ export class PalletsService {
 
   async create(createDto: CreatePalletDto) {
     try {
+
+      // create the QRCode
+      let palletId = new mongoose.Types.ObjectId();
+      debug(palletId.toString())
+      let palletQR = await qr.toDataURL(palletId.toString());
+      createDto._id = palletId;
+
+
       // create record
-      const createdRecord = await new this.PalletModel(createDto).save();
+      debug(createDto)
+      const createdRecord = await new this.PalletModel({ ...createDto, QRCode: palletQR}).save();
 
       // update patch
       const patchId = createDto.patch;
-      let patch = await this.PatchModel.findOneAndUpdate({ "_id": patchId }, { $inc: { inStockPallets: 1, totalPallets: 1 } }, { returnDocument: "after" });
+      let patch = await this.PatchModel.findOneAndUpdate({ "_id": patchId }, { $inc: { inStockPallets: 1, totalPallets: 1 }, $push: {pallets: palletId} }, { returnDocument: "after" });
       debug(patch)
 
       return createdRecord;
-
 
     } catch (err) {
       throw new BadRequestException(err.message);

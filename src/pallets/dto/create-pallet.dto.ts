@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 import { palletStatus } from "src/types";
 
+export interface IPalletAttribute {
+    key: string,
+    values: string;
+}
+
 export class CreatePalletDto {
+
+    _id: mongoose.Types.ObjectId;
 
     patch: mongoose.Schema.Types.ObjectId;
     
@@ -12,6 +19,8 @@ export class CreatePalletDto {
     station: mongoose.Schema.Types.ObjectId;
 
     product: mongoose.Schema.Types.ObjectId;
+
+    specifications: IPalletAttribute[];
     
     operation: mongoose.Schema.Types.ObjectId;
     

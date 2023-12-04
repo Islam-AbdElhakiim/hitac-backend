@@ -19,7 +19,7 @@ export class Patch {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Station", default: "", })
     station: mongoose.Schema.Types.ObjectId;
 
-    @Prop({ type: [mongoose.Schema.Types.ObjectId], /*ref: "Pallet",*/ default: [], })
+    @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: "Pallet", default: [], })
     pallets: mongoose.Schema.Types.ObjectId[];
 
     @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: "Product", default: [], })

@@ -24,7 +24,7 @@ export class PatchesService {
 
   async findOne(id: mongoose.Schema.Types.ObjectId) {
     try {
-      const record = await this.PatchModel.findById(id).populate(['suppliers', "qualitySpecialist", "operation", "station", "products"]);
+      const record = await this.PatchModel.findById(id).populate(['suppliers', "qualitySpecialist", "operation", "station", "products", "pallets"]);
       if (!record) throw new NotFoundException("record not exists!");
       return record;
     } catch (err) {
@@ -39,7 +39,7 @@ export class PatchesService {
   async findAll() {
 
     try {
-      return await this.PatchModel.find().populate(['suppliers', "qualitySpecialist", "operation", "station", "products"])
+      return await this.PatchModel.find().populate(['suppliers', "qualitySpecialist", "operation", "station", "products", "pallets"])
     } catch (err) {
       throw new BadRequestException(err.message)
     }
