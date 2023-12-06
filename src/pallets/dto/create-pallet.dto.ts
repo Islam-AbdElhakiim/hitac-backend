@@ -21,6 +21,10 @@ export class CreatePalletDto {
     product: mongoose.Schema.Types.ObjectId;
 
     specifications: IPalletAttribute[];
+
+    notes: string;
+
+    fulfillmentDate: Date;
     
     operation: mongoose.Schema.Types.ObjectId;
     

@@ -51,6 +51,12 @@ export class Pallet {
     @Prop({ type: [mongoose.Schema.Types.ObjectId], /* ref: "Patch" required: true  */ default: [] })
     salesCases: mongoose.Schema.Types.ObjectId[];
 
+    @Prop({default: ""})
+    notes: string;
+
+    @Prop({default: null})
+    fulfillmentDate: Date;
+
     @Prop({})
     QRCode: string;
 

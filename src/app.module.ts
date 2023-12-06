@@ -15,6 +15,8 @@ import { ReturnRequestsModule } from './return-requests/return-requests.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { PatchesModule } from './patches/patches.module';
 import { PalletsModule } from './pallets/pallets.module';
+import { EquipmentsTypesModule } from './equipments-types/equipments-types.module';
+import { EquipmentsVariantsModule } from './equipments-variants/equipments-variants.module';
 
 import * as config from 'config';
 const debug = require('debug')('app:start');
@@ -29,7 +31,7 @@ debug(`Database Server url is ${databaseUrl}`);
 
 
 @Module({
-  imports: [EmployeesModule, MongooseModule.forRoot(databaseUrl), AccountsModule, ContactsModule, SuppliersModule, StationsModule, SegmentsModule, ProductsModule, SupplyOrdersModule, ReturnRequestsModule, SessionsModule,  PatchesModule, PalletsModule, ],
+  imports: [EmployeesModule, MongooseModule.forRoot(databaseUrl), AccountsModule, ContactsModule, SuppliersModule, StationsModule, SegmentsModule, ProductsModule, SupplyOrdersModule, ReturnRequestsModule, SessionsModule,  PatchesModule, PalletsModule, EquipmentsTypesModule, EquipmentsVariantsModule, ],
   controllers: [AppController],
   providers: [AppService],
 })
